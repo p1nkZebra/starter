@@ -160,5 +160,65 @@
         </plugins>
     </build>
 
+    <profiles>
+        <profile>
+            <id>withAngular</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.github.eirslett</groupId>
+                        <artifactId>frontend-maven-plugin</artifactId>
+                        <version>${frontend-maven-plugin.version}</version>
+                        <configuration>
+                            <nodeVersion>v${frontend-maven-plugin.nodeVersion}</nodeVersion>
+                            <downloadRoot>http://nodejs.org/dist/</downloadRoot>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>install node.js and npm</id>
+                                <goals>
+                                    <goal>install-node-and-npm</goal>
+                                </goals>
+                                <phase>compile</phase>
+                            </execution>
+                            <execution>
+                                <id>npm set strict-ssl false</id>
+                                <goals>
+                                    <goal>npm</goal>
+                                </goals>
+                                <phase>process-classes</phase>
+                                <configuration>
+                                    <npmInheritsProxyConfigFromMaven>false</npmInheritsProxyConfigFromMaven>
+                                    <arguments>config set strict-ssl false</arguments>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>npm install dependencies</id>
+                                <goals>
+                                    <goal>npm</goal>
+                                </goals>
+                                <phase>compile</phase>
+                                <configuration>
+                                    <arguments>install</arguments>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>npm build prod</id>
+                                <goals>
+                                    <goal>npm</goal>
+                                </goals>
+                                <phase>compile</phase>
+                                <configuration>
+                                    <npmInheritsProxyConfigFromMaven>false</npmInheritsProxyConfigFromMaven>
+                                    <arguments>run build-prod</arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
 
 </project>
